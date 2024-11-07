@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Celebration</title> 
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff4b5c, #ffb84d);
+            overflow: hidden;
+            color: #fff;
+        }
+        #container {
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+        #countdown {
+            font-size: 4rem; /* Increased font size */
+            margin-top: 20px;
+        }
+        .button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            background-color: #ff6b81;
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background-color: #ff4757;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffeb3b;
+            opacity: 0.8;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh); opacity: 0; }
+        }
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            width: 30px;
+            height: 50px;
+            background: red;
+            border-radius: 50% 50% 0 0;
+            animation: floatUp 5s linear infinite;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-110vh); }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1 id="message">Coming Soon🎉🎉</h1> <!-- Initial message -->
+        <p>Gana Kaisa Hai 😁😂</p> <!-- Updated text -->
+        <div id="countdown"></div> <!-- Countdown timer display -->
+        <button class="button" id="playPauseBtn" onclick="toggleMusic()">Play Music 🎶</button>
+        <div id="revealSurprise" style="display: block;">
+            <button class="button" id="revealBtn" onclick="revealSurprise()">Idhar Click Kar 2-3 Times 🙏😊</button>
+        </div>
+        <button class="button" id="giftBtn" onclick="openGift()">Gift Yaha Pe Hai😋🥰</button> <!-- New gift button -->
+        <audio id="music" src="https://www.dropbox.com/scl/fi/ioqho9qsrf8w1wi7o9trr/ReelAudio-12239.mp3?rlkey=busb64pf2r6cqs9b1z9os7yya&st=4jrkuko4&raw=1" preload="auto"></audio>
+    </div>
+
+    <script>
+        // Set the target date for the birthday (14th November 2024)
+        const birthdayDate = new Date("2024-11-14T00:00:00").getTime();
+        const playPauseBtn = document.getElementById("playPauseBtn");
+
+        let clickCount = 0; // To track number of clicks
+
+        // Countdown function (disabled as per request)
+        function startCountdown() {
+            const countdownElement = document.getElementById("countdown");
+
+            let countdownInterval = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = birthdayDate - now;
+
+                // Time calculations for days, hours, minutes, and seconds
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Display the countdown without the "Time Left" text
+                countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+                // If the countdown is finished, show the Happy Birthday message
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    countdownElement.innerHTML = "Happy Birthday Iqra!! 🎉🎉";
+                    playMusic();
+                    showRevealButton();
+                }
+            }, 1000);
+        }
+
+        // Function to play music
+        function playMusic() {
+            const music = document.getElementById("music");
+            music.play();
+            playPauseBtn.innerHTML = "Pause Music 🎶"; // Change text to "Pause"
+        }
+
+        // Function to toggle music play/pause
+        function toggleMusic() {
+            const music = document.getElementById("music");
+            if (music.paused) {
+                music.play();
+                playPauseBtn.innerHTML = "Pause Music 🎶"; // Change text to "Pause"
+            } else {
+                music.pause();
+                playPauseBtn.innerHTML = "Play Music 🎶"; // Change text to "Play"
+            }
+        }
+
+        // Function to show the "Reveal Surprise" button on the birthday
+        function showRevealButton() {
+            document.getElementById("revealSurprise").style.display = "block";
+        }
+
+        // Function to reveal the birthday surprise
+        function revealSurprise() {
+            clickCount++;
+            if (clickCount >= 2) { // After 2 clicks, show the surprise
+                document.getElementById("message").innerHTML = "Happy Birthday Iqra!! 🎉🎉";
+                createConfetti();
+                createBalloons();
+            }
+        }
+
+        // Function to create confetti animation
+        function createConfetti() {
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDuration = Math.random() * 1 + 2 + 's';
+                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 50%)`;
+                document.body.appendChild(confetti);
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+
+        // Function to create balloon animation
+        function createBalloons() {
+            for (let i = 0; i < 10; i++) {
+                const balloon = document.createElement('div');
+                balloon.classList.add('balloon');
+                balloon.style.left = Math.random() * 100 + 'vw';
+                balloon.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 50%)`;
+                balloon.style.animationDuration = Math.random() * 3 + 5 + 's';
+                document.body.appendChild(balloon);
+                setTimeout(() => {
+                    balloon.remove();
+                }, 8000);
+            }
+        }
+
+        // Function to open the Canva gift document
+        function openGift() {
+            window.open("https://www.canva.com/design/DAGUpCuv1Lk/SBTGvrz7v6SGddtVQNQtYw/edit?utm_content=DAGUpCuv1Lk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton", "_blank");
+        }
+
+        // Start the countdown as soon as the page loads (optional, can be removed)
+        startCountdown();
+    </script>
+</body>
+</html>
